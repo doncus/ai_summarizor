@@ -14,7 +14,6 @@ const Demo = () => {
     e.preventDefault();
 
     const { data } = await getSummary({ articleUrl: article.url });
-    console.log(data);
     if (data?.summary) {
       const sumArticle = { ...article, summary: data.summary };
       setArticle(sumArticle);
