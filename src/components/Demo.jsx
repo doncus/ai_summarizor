@@ -1,15 +1,25 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { copy, linkIcon, loader, tick } from "../assets";
+import { useLazyGetSummaryQuery } from "../services/article";
 
 const Demo = () => {
   const [article, setArticle] = useState({
     url: "",
     summary: "",
   });
+  const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
 
   const handleSubmit = async (e) => {
-    e.preventDefaul();
+    e.preventDefault();
+
+    const { data } = await getSummary({ articleUrl: article.url });
+    console.log(data);
+    if (data?.summary) {
+      const sumArticle = { ...article, summary: data.summary };
+      setArticle(sumArticle);
+      console.log(sumArticle);
+    }
   };
 
   return (
@@ -29,7 +39,7 @@ const Demo = () => {
             placeholder="Enter a URL"
             value={article.url}
             onChange={(e) => setArticle({ ...article, url: e.target.value })}
-            // required
+            required
             className="url_input peer"
           />
           <button
